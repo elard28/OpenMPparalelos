@@ -31,6 +31,7 @@ int main(int argc, char const *argv[])
 				{
 					mem[pos_prod]=rand()%100+1;
 					printf("id:%d produce %d en posicion %d\n",omp_get_thread_num(), mem[pos_prod], pos_prod+1);
+					#pragma omp critical
 					pos_prod=(pos_prod+1)%N;
 
 					printf("Elementos al producir: ");

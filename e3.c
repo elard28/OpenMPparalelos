@@ -28,7 +28,7 @@ void Count_sort_parallel(int a[], int n ,int nthreads)
 {
 	int* temp = malloc ( n *sizeof(int));
 
-#pragma omp parallel num_threads(nthreads)
+#pragma omp parallel for num_threads(nthreads)
 	for (int i = 0; i < n; i ++) 
 	{
 		int count = 0;
@@ -41,7 +41,6 @@ void Count_sort_parallel(int a[], int n ,int nthreads)
 		}
 		temp[count] = a[i];
 	}
-	#pragma omp critical
 	memcpy (a , temp , n *sizeof(int));
 	free (temp);
 }
@@ -60,7 +59,7 @@ int main(int argc, char const *argv[])
         printf("%d ", v[i]);
     printf("\n\n");
 
-	Count_sort_parallel(v,N,2);
+	Count_sort_parallel(v,N,8);
     //Count_sort(v,N);
 
 	for (int i = 0; i < N; ++i)

@@ -37,6 +37,7 @@ void Gausian2()
 }
 
 
+
 void Gausian3()
 {
 #pragma omp parallel for schedule(static,1) num_threads(nthreads)
@@ -74,7 +75,7 @@ int main(int argc, char const *argv[])
 	A[1][0]= 4; A[1][1]=-5; A[1][2]= 1; b[1]= 7;
 	A[2][0]= 2; A[2][1]=-1; A[2][2]=-3; b[2]= 5;
 
-	Gausian2(); 
+	Gausian1(); 
 
 	for (int i = 0; i < N; ++i)
 		printf("%1.2f ", x[i]);
