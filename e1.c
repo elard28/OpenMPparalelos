@@ -10,6 +10,11 @@ int min_meas;
 int max_meas;
 int bin_count;
 
+int Find_bin()
+{
+	
+}
+
 int main(int argc, char const *argv[])
 {
 	float bin_maxes[bin_count];
@@ -26,7 +31,7 @@ int main(int argc, char const *argv[])
 
 	for (i=0; i < data_count; i++) 
 	{
-		bin = Find_bin (data[i], bin_maxes, bin_count, min_meas);
+		int bin = Find_bin (data[i], bin_maxes, bin_count, min_meas);
 		bin_counts[bin]++;
 	}
 
