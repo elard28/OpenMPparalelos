@@ -10,7 +10,7 @@ int nthreads;
 
 void Gausian1()
 {
-//#pragma omp parallel num_threads(nthreads)
+#pragma omp parallel num_threads(nthreads)
 	for(int row = N-1; row >= 0; row--) 
 	{
 		x[row] = b[row];
@@ -26,7 +26,7 @@ void Gausian2()
 //#pragma omp parallel num_threads(nthreads)
 	for(int row = 0; row<N; row++)
 		x[row] = b[row];
-//#pragma omp parallel num_threads(nthreads)
+#pragma omp parallel num_threads(nthreads)
 	for(int col = N-1; col >= 0; col--) 
 	{
 		x[col] /= A[col][col];
@@ -35,6 +35,36 @@ void Gausian2()
 			x[row] -= A[row][col]*x[col];
 	}
 }
+
+
+void Gausian3()
+{
+#pragma omp parallel for schedule(static,1) num_threads(nthreads)
+	for(int row = N-1; row >= 0; row--) 
+	{
+		x[row] = b[row];
+//#pragma omp parallel num_threads(nthreads)
+		for(int col = row+1; col<N ; col++)
+			x[row] -= A[row][col]*x[col];
+		x[row] /= A[row][row];
+	}
+}
+
+void Gausian4()
+{
+//#pragma omp parallel num_threads(nthreads)
+	for(int row = 0; row<N; row++)
+		x[row] = b[row];
+#pragma omp parallel for schedule(static,1) num_threads(nthreads)
+	for(int col = N-1; col >= 0; col--) 
+	{
+		x[col] /= A[col][col];
+//#pragma omp parallel num_threads(nthreads)
+		for(int row = 0; row < col ; row++)
+			x[row] -= A[row][col]*x[col];
+	}
+}
+
 
 int main(int argc, char const *argv[])
 {

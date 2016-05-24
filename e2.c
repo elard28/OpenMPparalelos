@@ -15,15 +15,17 @@ int main(int argc, char const *argv[])
 	double pi_estimate;
 
 # pragma omp parallel num_threads(thread_count)
-//#pragma omp parallel for num_threads(thread_count) \ 
-//	reduction(+: number_in_circle ) schedule(static,1)
 	for (int toss = 0; toss < number_of_tosses ; toss ++) 
 	{
 		double x = (rand()%201-100)/100.0;
 		double y = (rand()%201-100)/100.0;
 		double distance_squared = x * x + y * y ;
-		if ( distance_squared <= 1) 
-			number_in_circle++;
+		#pragma omp critical
+		if ( distance_squared <= 1)
+		{ 
+			//#pragma omp atomic
+			number_in_circle+=1;
+		}
 		printf("Num Thread: %d\t x: %1.2f\t y: %1.2f\t distance_squared: %1.2f\t number_in_circle: %d\n",
 			omp_get_thread_num(), x,y,distance_squared,number_in_circle);
 

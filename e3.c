@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <omp.h>
+#include <time.h>
+
+#define N 10000
 
 void Count_sort(int a[], int n ) 
 {
@@ -23,21 +26,22 @@ void Count_sort(int a[], int n )
 
 void Count_sort_parallel(int a[], int n ,int nthreads) 
 {
-	int i, j, count;
 	int* temp = malloc ( n *sizeof(int));
 
 #pragma omp parallel num_threads(nthreads)
-	for ( i = 0; i < n; i ++) 
+	for (int i = 0; i < n; i ++) 
 	{
-		count = 0;
-		for (j = 0; j < n; j ++)
+		int count = 0;
+		for (int j = 0; j < n; j ++)
+		{
 			if (a[j] < a[i])
 				count ++;
 			else if (a[j] == a[i] && j < i)
 				count++;
+		}
 		temp[count] = a[i];
 	}
-#pragma omp critical
+	#pragma omp critical
 	memcpy (a , temp , n *sizeof(int));
 	free (temp);
 }
@@ -45,13 +49,23 @@ void Count_sort_parallel(int a[], int n ,int nthreads)
 int main(int argc, char const *argv[])
 {
 	
-	int v[10]={3,6,5,9,2,4,1,9,7,0};
+	//int v[10]={3,6,5,9,2,4,1,9,7,0};
 
-	Count_sort_parallel(v,10,8);
+	srand(time(NULL));
+    int v[N];
+    for (int i = 0; i < N; ++i)
+        v[i]=rand()%100000;
 
-	for (int i = 0; i < 10; ++i)
+    for (int i = 0; i < N; ++i)
+        printf("%d ", v[i]);
+    printf("\n\n");
+
+	Count_sort_parallel(v,N,2);
+    //Count_sort(v,N);
+
+	for (int i = 0; i < N; ++i)
 		printf("%d ", v[i]);
-	printf("\n");
+	printf("\n\n");
 
 	return 0;
 }
